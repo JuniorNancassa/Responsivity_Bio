@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Ser</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/detalhes.css">
+  <style>
+    body { margin:0; font-family:'Inter',sans-serif; }
+
+    /* Botão hamburger */
+    .menu-toggle { display:none; font-size:1.8rem; background:none; border:none; color:#333; cursor:pointer; }
+
+    @media (max-width: 991px){
+      .main-nav-links { display:none !important; }
+      .menu-toggle { display:block; }
+      .detalhes-seres { flex-direction: column; }
+      .col-imagem, .col-info { width:100%; text-align:center; }
+      .ser-img { max-width:100%; height:auto; }
+      .textarea-wrapper { flex-direction: column; }
+      .textarea-wrapper textarea { margin-bottom:8px; }
+    }
+
+    /* Menu lateral */
+    .offcanvas { width: 260px; }
+    .offcanvas nav a { 
+      font-size:1.05rem; 
+      padding:10px; 
+      display:flex; 
+      align-items:center; 
+      border-radius:6px; 
+      transition:background 0.3s; 
+      color:#333; 
+      text-decoration:none;
+    }
+    .offcanvas nav a:hover { 
+      background:#e6f2ef; 
+      color:#006d77; 
+    }
+    .offcanvas nav i { margin-right:10px; color:#006d77; }
+
+    /* Hero */
+    .hero-denuncia {
+      background: linear-gradient(to right, rgba(0,109,119,0.8), rgba(131,197,190,0.8)),
+                  url('assets/images/hero-nature.jpg') center/cover no-repeat;
+      color:#fff; text-align:center; padding:5rem 1rem;
+    }
+    .hero-denuncia h1 { font-size:2.8rem; font-weight:bold; }
+    .hero-denuncia p { max-width:600px; margin:0 auto; }
+    .fale { background:#fff; color:#006d77; padding:10px 24px; border-radius:30px; text-decoration:none; font-weight:500; transition:0.3s; }
+    .fale:hover { background:#004d4d; color:#fff; }
+
+    /* Card e detalhes */
+    .card { border-radius:1rem; }
+    .info-item { margin-bottom:8px; font-size:0.95rem; }
+
+    /* Comentários */
+    #listaComentarios .list-group-item {
+      border-radius:8px;
+      margin-bottom:8px;
+      border:1px solid #e0e0e0;
+    }
+    #novoComentario { resize:none; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="main-nav border-bottom bg-light py-2 shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="logo fw-bold text-success d-flex align-items-center">
+        <i class="bi bi-tree-fill me-2"></i> BIO-GUINÉ
+      </div>
+      <button class="menu-toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuMobile" aria-label="Abrir menu">
+        <i class="bi bi-list"></i>
+      </button>
+      <nav class="main-nav-links d-none d-lg-flex gap-3">
+        <a href="index.html">Home</a>
+        <a href="cadastro.html">Espécies</a>
+        <a href="denuncia.html">Denúncias</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Menu lateral -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="menuMobile">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <nav class="d-flex flex-column gap-2">
+        <a href="index.html"><i class="bi bi-house-door"></i> Home</a>
+        <a href="cadastro.html"><i class="bi bi-list-ul"></i> Espécies</a>
+        <a href="denuncia.html"><i class="bi bi-flag"></i> Denúncias</a>
+        <a href="login.html"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-denuncia">
+    <div class="hero-denuncia-content">
+      <h1>Bio-Guiné</h1>
+      <p>Ajude a conservar a biodiversidade enviando denúncias detalhadas.</p>
+      <a class="fale" href="#">Fale conosco</a>
+    </div>
+  </section>
+
+  <!-- Detalhes -->
+  <div class="container my-5">
+    <div class="titulo-container mb-3">
+      <h3>Detalhes</h3>
+    </div>
+    <div class="card shadow-sm p-3">
+      <div class="row g-4 detalhes-seres d-flex">
+        <div class="col-imagem col-lg-7">
+          <img id="serImg" src="assets/images/default.png" alt="Imagem do ser" class="ser-img img-fluid rounded shadow-sm">
+        </div>
+        <div class="col-info col-lg-5 text-start">
+          <h3 id="nomeComum" class="fw-bold"></h3>
+          <h5 id="nomeCientifico" class="text-muted fst-italic"></h5>
+          <div class="info-item"><i class="bi bi-tag-fill me-1 text-primary"></i><span id="tipo"></span></div>
+          <div class="info-item"><i class="bi bi-bookmark-fill me-1 text-success"></i><span id="especie"></span></div>
+          <div class="info-item"><i class="bi bi-list-ul me-1 text-warning"></i><span id="categoria"></span></div>
+          <div class="info-item"><i class="bi bi-exclamation-triangle-fill me-1 text-danger"></i><span id="statusConservacao"></span></div>
+          <div class="info-item"><i class="bi bi-person-fill me-1 text-info"></i><span id="registradoPor"></span></div>
+          <div class="info-item"><i class="bi bi-calendar-check-fill me-1 text-secondary"></i><span id="dataRegistro"></span></div>
+          <div class="info-item"><i class="bi bi-geo-alt-fill me-1 text-danger"></i><span id="localizacao"></span></div>
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="mt-4">
+        <h5>Descrição</h5>
+        <div class="descricao" id="descricao"></div>
+      </div>
+
+      <!-- Comentários -->
+      <div class="comentarios mt-4">
+        <h5>
+          Comentários 
+          <button id="toggleComentarios" class="btn btn-sm btn-outline-secondary ms-2" aria-label="Mostrar comentários">
+            <i id="iconToggle" class="bi bi-chevron-up"></i>
+          </button>
+        </h5>
+        <div id="listaComentarios" class="list-group mb-3"></div>
+        <div class="textarea-wrapper d-flex">
+          <textarea id="novoComentario" class="form-control me-2" placeholder="Escreva seu comentário..." rows="2"></textarea>
+          <button id="btnEnviarComentario" class="btn btn-success" type="button"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/page/detalhes.js"></script>
+</body>
+</html>

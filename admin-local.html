@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard Melhorado</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+  }
+
+  .layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Menu lateral */
+  .sider {
+    width: 250px;
+    background: #1e1e2f;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  .sider h2 {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin: 0;
+    font-size: 18px;
+    background: #151522;
+  }
+  .sider h2 i {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .menu-container {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .menu li {
+    padding: 12px 20px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .menu li:hover, .menu li.active {
+    background: #1e1e2f;
+    
+  }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .submenu {
+    display: none;
+    padding-left: 20px;
+    background: #1e1e2f;
+  }
+  .submenu.open {
+    display: block;
+  }
+  .submenu li {
+    padding: 10px 20px;
+  }
+  .logout {
+    padding: 15px 20px;
+    background: #151522;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* Área principal */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  .toggle-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none; /* só aparece em mobile */
+  }
+  .header-right {
+    cursor: pointer;
+  }
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+  .breadcrumb {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 10px;
+  }
+  .footer {
+    text-align: center;
+    padding: 10px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .sider {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      transform: translateX(-100%);
+      z-index: 1000;
+    }
+    .sider.open {
+      transform: translateX(0);
+    }
+    .toggle-btn {
+      display: block;
+    }
+    .main {
+      margin-left: 0;
+    }
+  }
+
+  /* Estilo do perfil */
+  #perfil-template {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .user-login {
+    font-size: 20px;
+    margin: 0;
+  }
+  .user-email {
+    font-size: 12px;
+    color: gray;
+    margin: 2px 0 0 0;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- Menu lateral -->
+  <div id="sider" class="sider">
+    <h2><i class="fas fa-bars" onclick="toggleMenu()"></i> <span>Menu</span></h2>
+    <div class="menu-container">
+      <ul class="menu">
+        <li onclick="loadContent('Home', this)">
+          <div class="menu-item"><i class="fas fa-chart-pie"></i> <span>Home</span></div>
+        </li>
+        <li class="has-submenu">
+          <div class="menu-item" onclick="toggleSubmenu(this)">
+            <i class="fas fa-file-alt"></i> <span>Páginas</span>
+            <i class="fas fa-chevron-right arrow"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="loadContent('Usuários', this)"><i class="fas fa-user"></i> <span>Usuários</span></li>
+            <li onclick="loadContent('Seres', this)"><i class="fas fa-dragon"></i> <span>Seres</span></li>
+            <li onclick="loadContent('Denúncias', this)"><i class="fas fa-disease"></i> <span>Denúncias</span></li>
+          </ul>
+        </li>
+        <li class="has-submenu">
+          <div class="menu-item" onclick="toggleSubmenu(this)">
+            <i class="fas fa-database"></i> <span>Cadastros</span>
+            <i class="fas fa-chevron-right arrow"></i>
+          </div>
+          <ul class="submenu">
+            <li onclick="loadContent('Espécies', this)"><i class="fas fa-paw"></i> <span>Espécies</span></li>
+            <li onclick="loadContent('Categorias', this)"><i class="fas fa-list"></i> <span>Categorias</span></li>
+            <li onclick="loadContent('Tipos', this)"><i class="fas fa-tags"></i> <span>Tipos</span></li>
+            <li onclick="loadContent('Quiz', this)"><i class="fas fa-question-circle"></i> <span>Quiz</span></li>
+            <li onclick="loadContent('Perguntas', this)"><i class="fas fa-question-circle"></i> <span>Perguntas</span></li>
+            <li onclick="loadContent('Comentarios', this)"><i class="fas fa-check-circle"></i> <span>Comentarios</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="logout" onclick="loadContent('Logout', this)">
+      <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
+    </div>
+  </div>
+
+  <!-- Área principal -->
+  <div class="main">
+    <div class="header">
+      <button class="toggle-btn" onclick="toggleMenu()">☰</button>
+      <div class="header-right" onclick="loadContent('Perfil')">
+        <i class="fas fa-user-circle fa-lg"></i>
+      </div>
+    </div>
+
+    <div class="content">
+      <div id="breadcrumb" class="breadcrumb">Home</div>
+      <div id="main-content">Conteúdo inicial do dashboard</div>
+    </div>
+
+    <div class="footer">
+     Bio-Guiné © <span id="year"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Template de Perfil -->
+<div id="perfil-template" style="display:none;">
+  <h2>Perfil do Usuário</h2>
+  <div class="user-info">
+    <p class="user-login"></p>
+    <p class="user-email"></p>
+  </div>
+</div>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+function toggleMenu() {
+  document.getElementById('sider').classList.toggle('open');
+}
+
+function toggleSubmenu(element) {
+  const li = element.parentElement;
+  li.classList.toggle('open');
+  const submenu = li.querySelector('.submenu');
+  submenu.classList.toggle('open');
+}
+
+function loadContent(name, el = null) {
+  const content = document.getElementById('main-content');
+  const breadcrumb = document.getElementById('breadcrumb');
+
+  document.querySelectorAll('.menu li').forEach(li => li.classList.remove('active'));
+  if(el && !el.classList.contains('logout')) el.parentElement.classList.add('active');
+
+  breadcrumb.textContent = name;
+  content.innerHTML = `<p>Carregando ${name}...</p>`;
+
+  if(name === "Perfil") {
+    const login = localStorage.getItem("login") || "—";
+    const email = localStorage.getItem("email") || "—";
+
+    const perfilTemplate = document.getElementById("perfil-template");
+    const perfilClone = perfilTemplate.cloneNode(true);
+    perfilClone.style.display = "block";
+    perfilClone.querySelector(".user-login").textContent = login;
+    perfilClone.querySelector(".user-email").textContent = email;
+
+    content.innerHTML = "";
+    content.appendChild(perfilClone);
+    return;
+  }
+}
+</script>
+</body>
+</html>
